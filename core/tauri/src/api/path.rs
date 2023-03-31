@@ -8,6 +8,7 @@ use std::{
   env::temp_dir,
   path::{Component, Path, PathBuf},
 };
+use std::fs::canonicalize;
 
 use crate::{Config, Env, PackageInfo};
 
@@ -302,6 +303,7 @@ pub fn resolve_path<P: AsRef<Path>>(
     };
     if let Some(mut base_dir_path_value) = base_dir_path {
       // use the same path resolution mechanism as the bundler's resource injection algorithm
+      let mut base_dir_path_value = canonicalize(base_dir_path_value)?;
       if resolve_resource {
         let mut resource_path = PathBuf::new();
         for component in path.as_ref().components() {
